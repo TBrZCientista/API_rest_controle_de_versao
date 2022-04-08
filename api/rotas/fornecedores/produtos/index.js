@@ -3,7 +3,7 @@ const Tabela = require('./TabelaProdutos')
 const Produto = require('./Produto')
 
 roteador.get('/', async(requisicao, resposta)=> {
-    const produtos = await Tabela.listar(requisicao.params.idFornecedor)
+    const produtos = await Tabela.listar(requisicao.fornecedor.id)
     resposta.send (
         JSON.stringify(produtos)
     )
@@ -11,7 +11,7 @@ roteador.get('/', async(requisicao, resposta)=> {
 
 roteador.post('/',async (requisicao,resposta, proximo)=> {
     try{
-        const idFornecedor = requisicao.params.idFornecedor
+        const idFornecedor = requisicao.fornecedor.id
         const corpo = requisicao.body
         const dados = Object.assign({}, corpo, {fornecedor : idFornecedor})
         const produto = new Produto (dados)
@@ -28,7 +28,7 @@ roteador.post('/',async (requisicao,resposta, proximo)=> {
 roteador.delete('/:id', async(requisicao,resposta) => {
     const dados = {
         id : requisicao.params.id,
-        fornecedor: requisicao.params.idFornecedor
+        fornecedor: requisicao.fornecedor.id
     }
 
     const produto = new Produto(dados)
@@ -36,5 +36,6 @@ roteador.delete('/:id', async(requisicao,resposta) => {
     resposta.status(204)
     resposta.end()
 })
+
 
 module.exports = roteador
