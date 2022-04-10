@@ -1,5 +1,6 @@
 const Modelo = require('./ModeloTabelaProduto')
 
+
 module.exports = {
     listar(idFornecedor){
         return Modelo.findAll({
@@ -11,12 +12,27 @@ module.exports = {
     inserir(dados){
         return Modelo.create(dados)
     },
-    reomver(idProduto,idFornecedor){
+    remover(idProduto,idFornecedor){
         return Modelo.destroy({
             where : {
                 id: idProduto,
                 fornecedor: idFornecedor
             }
         })
+    },
+    async pegarPorId(idProduto, idFornecedor){
+        const encontrado = await Modelo.findOne({
+            where: {
+                id: idProduto,
+                fornecedor : idFornecedor
+            },
+            raw: true 
+        })
+
+        if (!encontrado) {
+            throw new Error ('O produto não foi encontrado')
+        }
+
+        return encontrado
     }
 }
